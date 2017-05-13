@@ -5,6 +5,9 @@ var Twitter = require("Twitter");
 var fs = require("fs")
 var twitterKeys = require("./keys.js");
 
+const OUTPUT_FILE = "./log.txt";
+const SECTION_SEPARATOR = "###########################################\n";
+
 // get command line arguments
 var command = process.argv[2];
 var argument = process.argv[3];
@@ -60,19 +63,24 @@ function runRandomCommand() {
 function printTweets() {
   var client = new Twitter(twitterKeys.twitterKeys);
   var params = {screen_name: 'rueda_dev'};
-  client.get('statuses/user_timeline', params, function(error, tweets, response) {
-    if (!error) {
+  client.get('statuses/user_timeline', params, function(twitterError, tweets, response) {
+    if (!twitterError) {
       tweets.forEach(function(tweet, index) {
         if (index === 20) {
           return false;
         }
-        console.log(tweet.created_at);
-        console.log('\'' + tweet.user.screen_name + '\' says: ');
-        console.log(tweet.text);
-        console.log('');
+        var messageOutput = tweet.created_at;
+        messageOutput += "\n\'" + tweet.user.screen_name + '\' says: ';
+        messageOutput += "\n" + tweet.text + "\n";
+
+        console.log(messageOutput);
+        fs.appendFile(OUTPUT_FILE, messageOutput, function(appendError) {
+          if (appendError) { console.log(appendError); }
+        });
       });
+      fs.appendFile(OUTPUT_FILE, SECTION_SEPARATOR, function(appendError) {} );
     } else {
-      console.log("An error occurred: " + error);
+      console.log("An error ocurred: " + twitterError);
     }
   });
 }
@@ -100,13 +108,18 @@ function printSongInfo() {
           artists += artist.name + ", ";
         });
         artists = artists.slice(0, -2);
-        console.log("Artists: " + artists);
-        console.log("Song name: " + item.name);
-        console.log("Preview link: " + item.preview_url);
-        console.log("Album: " + item.album.name);
-        console.log("");
+
+        var messageOutput = "Artists: " + artists;
+        messageOutput += "\nSong name: " + item.name;
+        messageOutput += "\nPreview link: " + item.preview_url;
+        messageOutput += "\nAlbum: " + item.album.name + "\n";
+        console.log(messageOutput);
+        fs.appendFile(OUTPUT_FILE, messageOutput, function(appendError) {
+          if (appendError) { console.log(appendError); };
+        });
       }
     });
+    fs.appendFile(OUTPUT_FILE, SECTION_SEPARATOR, function(appendError) {});
   });
 }
 
@@ -122,14 +135,19 @@ function printMovieInfo() {
   // run request
   request('http://www.omdbapi.com/?t=' + argument.trim() + '&y=&plot=short&r=json', function(error, response, body) {
     if (!error && response.statusCode === 200) {
-      console.log("Title: " + JSON.parse(body).Title);
-      console.log("Year: " + JSON.parse(body).Year);
-      console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-      console.log("Country/Countries of production: " + JSON.parse(body).Country);
-      console.log("Language: " + JSON.parse(body).Language);
-      console.log("Plot: " + JSON.parse(body).Plot);
-      console.log("Actors: " + JSON.parse(body).Actors);
-      console.log("Rotten Tomatoes URL: " + JSON.parse(body).Website);
+      var messageOutput = "Title: " + JSON.parse(body).Title;
+      messageOutput += "\nYear: " + JSON.parse(body).Year;
+      messageOutput += "\nIMDB Rating: " + JSON.parse(body).imdbRating;
+      messageOutput += "\nCountry/Countries of production: " + JSON.parse(body).Country;
+      messageOutput += "\nLanguage: " + JSON.parse(body).Language;
+      messageOutput += "\nPlot: " + JSON.parse(body).Plot;
+      messageOutput += "\nActors: " + JSON.parse(body).Actors;
+      messageOutput += "\nRotten Tomatoes URL: " + JSON.parse(body).Website + "\n";
+      console.log(messageOutput);
+      messageOutput += SECTION_SEPARATOR;
+      fs.appendFile(OUTPUT_FILE, messageOutput, function(appendError) {
+        if (appendError) { console.log(appendError); }
+      });
     } else {
       console.log("Error making request: " + error);
     }
