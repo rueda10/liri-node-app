@@ -142,7 +142,8 @@ function printMovieInfo() {
       messageOutput += "\nLanguage: " + JSON.parse(body).Language;
       messageOutput += "\nPlot: " + JSON.parse(body).Plot;
       messageOutput += "\nActors: " + JSON.parse(body).Actors;
-      messageOutput += "\nRotten Tomatoes URL: " + JSON.parse(body).Website + "\n";
+      var rottenTomatoesUrl = 'https://www.rottentomatoes.com/m/' + argument.toLowerCase().replace(/ /g , "_").replace(/[.',!?%$#@]/g ,"");
+      messageOutput += "\nRotten Tomatoes URL: " + rottenTomatoesUrl + "\n";
       console.log(messageOutput);
       messageOutput += SECTION_SEPARATOR;
       fs.appendFile(OUTPUT_FILE, messageOutput, function(appendError) {
