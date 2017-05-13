@@ -160,21 +160,21 @@ function printMovieInfo() {
  * with incorrect commands/arguments
  */
 function usage() {
-  console.log("usage: node liri.js my-tweets|spotify-this-song|movie-this|do-what-it-says ['<song name>'] ['<movie name>']");
+  console.log("usage: node liri.js my-tweets|spotify-this-song|movie-this|do-what-it-says [\"<song name>\"] [\"<movie name>\"]");
   var command = "options:";
   console.log(sprintf("%" + (command.length + 4) + "s", "options:"));
   command = "my-tweets:";
   var description = "Displays last 20 tweets.";
   console.log(sprintf("%" + (command.length + 8) + "s%" + (description.length + 10) + "s", command, description));
   command = "spotify-this-song:";
-  description = "Displays song information for '<song name>'.";
+  description = "Displays song information for \"<song name>\".";
   console.log(sprintf("%" + (command.length + 8) + "s%" + (description.length + 2) + "s", command, description));
-  var example = "Example: node liri.js spotify-this-song 'Hey Jude'";
+  var example = "Example: node liri.js spotify-this-song \"Hey Jude\"";
   console.log(sprintf("%" + (example.length + 12) + "s", example));
   command = "movie-this:";
-  description = "Displays movie information for '<movie name>'.";
+  description = "Displays movie information for \"<movie name>\".";
   console.log(sprintf("%" + (command.length + 8) + "s%" + (description.length + 9) + "s", command, description));
-  example = "Example: node liri.js movie-this 'Rogue One'";
+  example = "Example: node liri.js movie-this \"Dude, where's my car?\"";
   console.log(sprintf("%" + (example.length + 12) + "s", example));
   command = "do-what-it-says:";
   description = "Randomly runs one of the commands listed above.";
